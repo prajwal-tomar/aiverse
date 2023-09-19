@@ -1,7 +1,7 @@
 import React from "react";
 
 const page = () => {
-  return <div>this is the landing page (unprotected it is.)</div>;
+  return <div>landing page (unprotected.)</div>;
 };
 
 export default page;
