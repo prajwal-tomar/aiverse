@@ -26,28 +26,28 @@ const tools = [
     icon: ImageIcon,
     iconColor: "text-green-800",
     bgColor: "bg-green-300",
-    href: "/image-generation",
+    href: "/image",
   },
   {
     label: "Video Generation",
     icon: VideoIcon,
     iconColor: "text-yellow-800",
     bgColor: "bg-yellow-300",
-    href: "/video-generation",
+    href: "/video",
   },
   {
     label: "Music Generation",
     icon: Music,
     iconColor: "text-orange-800",
     bgColor: "bg-orange-300",
-    href: "/video-generation",
+    href: "/music",
   },
   {
     label: "Code Generation",
     icon: Code,
     iconColor: "text-indigo-800",
     bgColor: "bg-indigo-300",
-    href: "/video-generation",
+    href: "/code",
   },
 ];
 

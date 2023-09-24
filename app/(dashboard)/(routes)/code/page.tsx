@@ -1,5 +1,5 @@
 "use client";
-import { MessageSquare } from "lucide-react";
+import { Code } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -8,8 +8,9 @@ import { ChatCompletionRequestMessage } from "openai";
 import Image from "next/image";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
+import ReactMarkdown from "react-markdown";
 
-const ConversationPage = () => {
+const CodePage = () => {
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false); // by default the loading state is false.
 
@@ -18,7 +19,6 @@ const ConversationPage = () => {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
   } = useForm();
 
   const onSubmit = async (data: any) => {
@@ -33,7 +33,7 @@ const ConversationPage = () => {
       const newMessages = [...messages, userMessage];
 
       // send all the messages to chatGPT. Including the existing ones.
-      const response = await axios.post("/api/conversation", {
+      const response = await axios.post("/api/code", {
         messages: newMessages,
       });
       setIsLoading(false);
@@ -51,12 +51,12 @@ const ConversationPage = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-x-3 flex items-center">
           <div className="bg-indigo-300 p-2 w-fit rounded-lg">
-            <MessageSquare className="w-10 h-10 text-indigo-800" />
+            <Code className="w-10 h-10 text-indigo-800" />
           </div>
           <div>
-            <h1 className="md:text-4xl text-2xl font-bold">Conversation</h1>
+            <h1 className="md:text-4xl text-2xl font-bold">Nebula | Code Generator</h1>
             <p className="text-slate-500 md:text-md text-sm">
-              Our most advanced conversation model.{" "}
+              Our most advanced code generation model.{" "}
             </p>
           </div>
         </div>
@@ -74,7 +74,7 @@ const ConversationPage = () => {
                   className={`border p-2 md:py-8 rounded-lg focus:outline-none ${
                     errors.prompt ? "border-red-500" : "border-gray-300"
                   }`}
-                  placeholder="How do I calculate the radius of a circle?"
+                  placeholder="Simple toggle button using react hooks"
                 />
                 {errors.prompt && (
                   <p className="text-red-500 text-xs mt-1">
@@ -91,14 +91,14 @@ const ConversationPage = () => {
             type="submit"
             className="bg-slate-950 text-white rounded-lg px-4 py-2 w-full md:w-fit"
           >
-            Submit
+            Generate
           </button>
         </div>
         <div className="space-y-4">
           {!isLoading && messages.length === 0 && (
             <div className="space-y-5">
               <h1 className="text-2xl font-bold text-center mt-10">
-                No Conversation started yet.
+                Start Coding with Nebula.
               </h1>
               <div className="flex justify-center">
                 <Image alt="logo" src="/empty.png" width={150} height={150} />
@@ -111,7 +111,7 @@ const ConversationPage = () => {
                 <Image alt="logo" fill src="/logo.png" />
               </div>
               <p className="text-center text-sm animate-pulse">
-                Nebula is thinking...
+                Nebula is on a cosmic quest to fetch your answer...
               </p>
             </div>
           )}
@@ -126,7 +126,21 @@ const ConversationPage = () => {
                 }`}
               >
                 {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
-                {message.content}
+                <ReactMarkdown
+                  components={{
+                    pre: ({ node, ...props }) => (
+                      <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg">
+                        <pre {...props} />
+                      </div>
+                    ),
+                    code: ({ node, ...props }) => (
+                      <code className="bg-black/10 rounded-lg p-1" {...props} />
+                    ),
+                  }}
+                  className="text-sm overflow-hidden leading-7"
+                >
+                  {message.content || ""}
+                </ReactMarkdown>
               </div>
             ))}
           </div>
@@ -136,4 +150,4 @@ const ConversationPage = () => {
   );
 };
 
-export default ConversationPage;
+export default CodePage;

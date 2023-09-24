@@ -31,25 +31,25 @@ const routes = [
     color: "text-green-400",
   },
   {
-    href: "/image-generation",
+    href: "/image",
     title: "Image Generation",
     icon: ImageIcon,
     color: "text-indigo-400",
   },
   {
-    href: "/video-generation",
+    href: "/video",
     title: "Video Generation",
     icon: VideoIcon,
     color: "text-orange-400",
   },
   {
-    href: "/music-generation",
+    href: "/music",
     title: "Music Generation",
     icon: Music,
     color: "text-red-400",
   },
   {
-    href: "/code-generation",
+    href: "/code",
     title: "Code Generation",
     icon: Code,
     color: "text-blue-800",
@@ -68,7 +68,7 @@ const Sidebar = () => {
     
       <div className="flex flex-col space-y-4 text-white h-full pt-3 bg-slate-900">
         <Link href="/">
-          <div className="py-5 px-3 ml-3 h-12 w-12 flex items-center">
+          <div className="py-5 px-3 ml-3 h-16 w-16 flex items-center">
             <Image src="/logo.png" alt="Logo" width={500} height={500} />
             <h1 className={`pl-3 text-2xl font-bold ${poppins.className}`}>
               aiverse
