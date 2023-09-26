@@ -13,6 +13,7 @@ import ReactMarkdown from "react-markdown";
 const CodePage = () => {
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false); // by default the loading state is false.
+  const [error, setError] = useState<boolean>(false);
 
   const router = useRouter();
   const {
@@ -40,7 +41,22 @@ const CodePage = () => {
       setMessages((current) => [...current, userMessage, response.data]);
       console.log(messages);
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        if (axiosError.response && axiosError.response.status === 403) {
+          // Handle the 403 error here
+          const errorMessage = axiosError.response.data;
+          setError(true);
+          console.error(errorMessage);
+        } else {
+          // Handle other types of Axios errors if needed
+          console.error(axiosError.message);
+        }
+      } else {
+        // Handle non-Axios errors here
+        console.error(error);
+      }
     } finally {
       router.refresh();
     }
@@ -54,7 +70,9 @@ const CodePage = () => {
             <Code className="w-10 h-10 text-indigo-800" />
           </div>
           <div>
-            <h1 className="md:text-4xl text-2xl font-bold">Nebula | Code Generator</h1>
+            <h1 className="md:text-4xl text-2xl font-bold">
+              Nebula | Code Generator
+            </h1>
             <p className="text-slate-500 md:text-md text-sm">
               Our most advanced code generation model.{" "}
             </p>
@@ -144,6 +162,13 @@ const CodePage = () => {
               </div>
             ))}
           </div>
+          {error && (
+            <div>
+              <h1 className="text-center text-red-500 font-semibold">
+                Free trial has expired. Please upgrade to pro.
+              </h1>
+            </div>
+          )}
         </div>
       </form>
     </div>

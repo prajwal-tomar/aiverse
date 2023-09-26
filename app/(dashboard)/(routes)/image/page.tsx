@@ -17,7 +17,6 @@ const ImagePage = () => {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
   } = useForm();
 
   const onSubmit = async (data: any) => {
@@ -32,8 +31,8 @@ const ImagePage = () => {
       const urls = response.data.map((image: { url: string }) => image.url);
       setImages(urls);
       setIsLoading(false);
-      reset();
     } catch (error) {
+      setIsLoading(false);
       setIsLoading(false);
       console.log(error);
     } finally {

@@ -28,13 +28,13 @@ const tools = [
     bgColor: "bg-green-300",
     href: "/image",
   },
-  {
-    label: "Video Generation",
-    icon: VideoIcon,
-    iconColor: "text-yellow-800",
-    bgColor: "bg-yellow-300",
-    href: "/video",
-  },
+  // {
+  //   label: "Video Generation",
+  //   icon: VideoIcon,
+  //   iconColor: "text-yellow-800",
+  //   bgColor: "bg-yellow-300",
+  //   href: "/video",
+  // },
   {
     label: "Music Generation",
     icon: Music,
@@ -71,13 +71,13 @@ const page = () => {
             className="p-4 border-black/5 hover:shadow-lg"
             onClick={() => router.push(tool.href)}
           >
-            <div className="flex justify-between px-5">
+            <div className="flex justify-between items-center px-5">
               <div className="flex items-center space-x-4">
                 <div className={`rounded-lg p-2 ${tool.bgColor}`}>
                   <tool.icon className={`${tool.iconColor}`} />
                 </div>
 
-                <h1>{tool.label}</h1>
+                <div className="hover:cursor-pointer font-semibold">{tool.label}</div>
               </div>
               <ArrowRight />
             </div>

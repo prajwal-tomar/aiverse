@@ -1,7 +1,7 @@
 "use client";
 import { MessageSquare } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ChatCompletionRequestMessage } from "openai";
@@ -12,13 +12,13 @@ import BotAvatar from "@/components/BotAvatar";
 const ConversationPage = () => {
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false); // by default the loading state is false.
+  const [error, setError] = useState<boolean>(false); // by default the loading state is false.
 
-  const router = useRouter();
+  // const router = useRouter();
   const {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
   } = useForm();
 
   const onSubmit = async (data: any) => {
@@ -40,9 +40,22 @@ const ConversationPage = () => {
       setMessages((current) => [...current, userMessage, response.data]);
       console.log(messages);
     } catch (error) {
-      console.log(error);
-    } finally {
-      router.refresh();
+      setIsLoading(false);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        if (axiosError.response && axiosError.response.status === 403) {
+          // Handle the 403 error here
+          const errorMessage = axiosError.response.data;
+          setError(true);
+          console.error(errorMessage);
+        } else {
+          // Handle other types of Axios errors if needed
+          console.error(axiosError.message);
+        }
+      } else {
+        // Handle non-Axios errors here
+        console.error(error);
+      }
     }
   };
 
@@ -91,7 +104,7 @@ const ConversationPage = () => {
             type="submit"
             className="bg-slate-950 text-white rounded-lg px-4 py-2 w-full md:w-fit"
           >
-            Submit
+            Generate
           </button>
         </div>
         <div className="space-y-4">
@@ -130,6 +143,13 @@ const ConversationPage = () => {
               </div>
             ))}
           </div>
+          {error && (
+            <div>
+              <h1 className="text-center text-red-500 font-semibold">
+                Free trial has expired. Please upgrade to pro.
+              </h1>
+            </div>
+          )}
         </div>
       </form>
     </div>
