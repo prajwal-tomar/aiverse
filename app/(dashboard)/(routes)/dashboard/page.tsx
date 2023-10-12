@@ -28,13 +28,6 @@ const tools = [
     bgColor: "bg-green-300",
     href: "/image",
   },
-  // {
-  //   label: "Video Generation",
-  //   icon: VideoIcon,
-  //   iconColor: "text-yellow-800",
-  //   bgColor: "bg-yellow-300",
-  //   href: "/video",
-  // },
   {
     label: "Music Generation",
     icon: Music,

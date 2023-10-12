@@ -1,5 +1,5 @@
 "use client";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Zap } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -8,11 +8,21 @@ import { ChatCompletionRequestMessage } from "openai";
 import Image from "next/image";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
+import UpgradeModal from "@/components/UpgradeModal";
 
 const ConversationPage = () => {
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false); // by default the loading state is false.
   const [error, setError] = useState<boolean>(false); // by default the loading state is false.
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
+
+  const openUpgradeModal = () => {
+    setIsUpgradeModalOpen(true);
+  };
+
+  const closeUpgradeModal = () => {
+    setIsUpgradeModalOpen(false);
+  };
 
   // const router = useRouter();
   const {
@@ -44,7 +54,11 @@ const ConversationPage = () => {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
         if (axiosError.response && axiosError.response.status === 403) {
-          // Handle the 403 error here
+          openUpgradeModal();
+          <UpgradeModal
+            isOpen={isUpgradeModalOpen}
+            onClose={closeUpgradeModal}
+          />;
           const errorMessage = axiosError.response.data;
           setError(true);
           console.error(errorMessage);
@@ -144,10 +158,21 @@ const ConversationPage = () => {
             ))}
           </div>
           {error && (
-            <div>
-              <h1 className="text-center text-red-500 font-semibold">
+            <div className="flex flex-col">
+              <h1 className="text-center text-xl text-red-500 font-bold mb-5">
                 Free trial has expired. Please upgrade to pro.
               </h1>
+              <div
+                className="flex items-center justify-center bg-purple-700 w-36 mx-auto rounded-lg hover:bg-purple-600 hover:cursor-pointer"
+                onClick={openUpgradeModal}
+              >
+                <h1 className="text-white text-lg font-bold py-2">Upgrade</h1>
+                <Zap className="w-6 h-6 ml-1 text-white" />
+              </div>
+              <UpgradeModal
+                isOpen={isUpgradeModalOpen}
+                onClose={closeUpgradeModal}
+              />
             </div>
           )}
         </div>
